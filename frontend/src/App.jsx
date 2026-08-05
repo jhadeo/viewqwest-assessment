@@ -30,10 +30,10 @@ function App() {
 
     const task = { title };
 
-    if (desc){
+    if (desc) {
       task.description = desc;
     }
-    
+
     try {
       const response = await fetch("http://localhost:8000/api/tasks", {
         method: "POST",
@@ -42,25 +42,44 @@ function App() {
         },
         body: JSON.stringify(task),
       });
-      if (response.ok) {
-        setTasks([...tasks, task]);
+      if (!response.ok) {
+        throw new Error("Failed to create task");
       }
+      
+      setTasks([...tasks, task]);
+      setDesc("");
+      setTitle("");
+
     } catch (err) {
       console.error(err);
     }
   }
 
   return (
-    <>
-      <TaskList tasks={tasks} />
-      <TaskForm
-        title={title}
-        desc={desc}
-        setDesc={setDesc}
-        setTitle={setTitle}
-        handleSubmit={handleSubmit}
-      />
-    </>
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-4xl mx-auto px-4">
+        <header className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
+          <p className="text-sm text-gray-500">Create and view your tasks</p>
+        </header>
+
+        <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="md:col-span-2">
+            <TaskList tasks={tasks} />
+          </section>
+
+          <aside className="md:col-span-1">
+            <TaskForm
+              title={title}
+              desc={desc}
+              setDesc={setDesc}
+              setTitle={setTitle}
+              handleSubmit={handleSubmit}
+            />
+          </aside>
+        </main>
+      </div>
+    </div>
   );
 }
 
