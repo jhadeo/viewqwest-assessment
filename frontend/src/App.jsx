@@ -28,7 +28,12 @@ function App() {
     setTitle(title.trim());
     setDesc(desc.trim());
 
-    const task = { title, description: desc };
+    const task = { title };
+
+    if (desc){
+      task.description = desc;
+    }
+    
     try {
       const response = await fetch("http://localhost:8000/api/tasks", {
         method: "POST",
@@ -37,7 +42,7 @@ function App() {
         },
         body: JSON.stringify(task),
       });
-      if (response.ok){
+      if (response.ok) {
         setTasks([...tasks, task]);
       }
     } catch (err) {
