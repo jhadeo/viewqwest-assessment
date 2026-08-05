@@ -46,7 +46,9 @@ function App() {
         throw new Error("Failed to create task");
       }
       
-      setTasks([...tasks, task]);
+      const { data: newTask } = await response.json();
+      
+      setTasks([newTask, ...tasks]);
       setDesc("");
       setTitle("");
 
