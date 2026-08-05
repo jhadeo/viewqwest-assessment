@@ -22,10 +22,39 @@ function App() {
     fetchTasks();
   }, []);
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    setTitle(title.trim());
+    setDesc(desc.trim());
+
+    const task = { title, description: desc };
+    try {
+      const response = await fetch("http://localhost:8000/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+      if (response.ok){
+        setTasks([...tasks, task]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <>
       <TaskList tasks={tasks} />
-      <TaskForm title={title} desc={desc} setDesc={setDesc} setTitle={setTitle}/>
+      <TaskForm
+        title={title}
+        desc={desc}
+        setDesc={setDesc}
+        setTitle={setTitle}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }
